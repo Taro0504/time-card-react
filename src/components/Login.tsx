@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient("https://ikpprbfqiymywxwtalzt.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcHByYmZxaXlteXd4d3RhbHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTIzMzI1OTMsImV4cCI6MjAwNzkwODU5M30.j5Qe_YKtaNKdEa9a7NZFUwgn7JY24J4aJQQftOpNQSM");
 
 type FormData = {
   email: string;
@@ -16,18 +19,16 @@ function Login() {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
       });
-      const result = await response.json();
-      if (result.id) {
-        navigate("/login");
+  
+      if (user) {
+        navigate("/dashboard"); // ログイン後のリダイレクト先
       } else {
         // エラーメッセージ
+        console.error("ログインエラー:", error?.message);
       }
     } catch (error) {
       console.error("登録エラー:", error);

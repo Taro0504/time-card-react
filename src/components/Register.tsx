@@ -1,5 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 
 type FormData = {
   name: string;
@@ -19,11 +21,9 @@ function Register() {
   return (
     <div className="flex h-screen">
       <div className="w-1/2 flex bg-[url('/public/images/register-bg.png')] bg-no-repeat bg-contain bg-center">
-        {<div className="w-1/2 flex bg-[url('/public/images/login-bg.png')] bg-no-repeat bg-contain bg-center">
         <div className="ml-6 mt-6">
           <FontAwesomeIcon icon={faCoffee} />
           <span className="text-xl font-bold text-black">Functional Lab</span>
-        </div>
       </div>
       </div>
       <div className="w-1/2 bg-main-2 flex items-center justify-center">
