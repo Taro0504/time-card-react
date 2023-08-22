@@ -1,11 +1,9 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient("https://ikpprbfqiymywxwtalzt.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcHByYmZxaXlteXd4d3RhbHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTIzMzI1OTMsImV4cCI6MjAwNzkwODU5M30.j5Qe_YKtaNKdEa9a7NZFUwgn7JY24J4aJQQftOpNQSM");
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import supabase from '../utils/supabaseClient';
 
 type FormData = {
   email: string;
@@ -19,19 +17,19 @@ function Login() {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
+      const { data: userData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
       });
-  
-      if (user) {
-        navigate("/dashboard"); // ログイン後のリダイレクト先
+
+      if (userData.user) {
+        navigate('/dashboard'); // ログイン後のリダイレクト先
       } else {
         // エラーメッセージ
-        console.error("ログインエラー:", error?.message);
+        console.error('ログインエラー:', error?.message);
       }
     } catch (error) {
-      console.error("登録エラー:", error);
+      console.error('登録エラー:', error);
     }
   };
 
@@ -51,16 +49,13 @@ function Login() {
             className="p-8 rounded-lg shadow-md w-96"
           >
             <div className="mb-4 relative flex flex-col text-center">
-              <label
-                htmlFor="email"
-                className="block text-gray-300 mb-2"
-              >
+              <label htmlFor="email" className="block text-gray-300 mb-2">
                 メールアドレス
               </label>
               <input
                 id="email"
                 type="email"
-                {...register("email", { required: true })}
+                {...register('email', { required: true })}
                 className="w-full p-2 border-b border-main-2 bg-transparent text-gray-700"
                 placeholder="メールアドレス"
               />
@@ -71,16 +66,13 @@ function Login() {
               )}
             </div>
             <div className="mb-4 relative flex flex-col">
-              <label
-                htmlFor="password"
-                className="block text-gray-700 mb-2"
-              >
+              <label htmlFor="password" className="block text-gray-700 mb-2">
                 パスワード
               </label>
               <input
                 id="password"
                 type="password"
-                {...register("password", { required: true })}
+                {...register('password', { required: true })}
                 className="w-full p-2 border-b border-main-2 bg-transparent text-gray-700"
                 placeholder="パスワード"
               />
@@ -103,7 +95,12 @@ function Login() {
         <div className="mt-4">
           <p className="h-100">
             アカウント登録がまだの方は
-            <Link to="/register" className="text-main rounded hover:text-red text-center">こちら</Link>
+            <Link
+              to="/register"
+              className="text-main rounded hover:text-red text-center"
+            >
+              こちら
+            </Link>
           </p>
         </div>
       </div>

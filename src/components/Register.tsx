@@ -1,7 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import supabase from '../utils/supabaseClient';
 
 type FormData = {
   name: string;
@@ -15,7 +16,22 @@ function Register() {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // ...
+    const { data: userData, error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          name: data.name,
+        },
+      },
+    });
+
+    if (userData) {
+      navigate('/login');
+    } else {
+      // エラーメッセージ
+      console.error('登録エラー:', error?.message);
+    }
   };
 
   return (
@@ -24,7 +40,7 @@ function Register() {
         <div className="ml-6 mt-6">
           <FontAwesomeIcon icon={faCoffee} />
           <span className="text-xl font-bold text-black">Functional Lab</span>
-      </div>
+        </div>
       </div>
       <div className="w-1/2 bg-main-2 flex items-center justify-center">
         <div className="bg-white flex flex-col items-center justify-center text-center content-center rounded-lg">
@@ -40,7 +56,9 @@ function Register() {
                 placeholder="名前"
               />
               {errors.name && (
-                <span className="text-red text-sm mt-1">このフィールドは必須です</span>
+                <span className="text-red text-sm mt-1">
+                  このフィールドは必須です
+                </span>
               )}
             </div>
             <div className="mb-4 relative flex flex-col text-center">
@@ -51,7 +69,9 @@ function Register() {
                 placeholder="メールアドレス"
               />
               {errors.email && (
-                <span className="text-red text-sm mt-1">このフィールドは必須です</span>
+                <span className="text-red text-sm mt-1">
+                  このフィールドは必須です
+                </span>
               )}
             </div>
             <div className="mb-4 relative flex flex-col text-center">
@@ -63,7 +83,9 @@ function Register() {
                 placeholder="パスワード"
               />
               {errors.password && (
-                <span className="text-red text-sm mt-1">このフィールドは必須です</span>
+                <span className="text-red text-sm mt-1">
+                  このフィールドは必須です
+                </span>
               )}
             </div>
             <div className="px-4 py-2">
